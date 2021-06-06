@@ -1,0 +1,78 @@
+body{
+    margin: 0;
+}
+.hero{
+    width: 100%;
+    text-align: center;
+    min-height: 40vh;
+    background: #7E5C3F;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+.hero-title{
+    padding: 0;
+    margin: 0;
+    margin-bottom: 2rem;
+    font-size: x-large;
+    color: aliceblue;
+    /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    font-variant: small-caps;
+    font-size: 3rem;
+}
+#search-input{
+    border: 1px solid gray;
+    border-radius: 2rem;
+    min-width: 20rem;
+    min-height: 3rem;
+    font-size: large;
+    outline: none;
+    padding: 1rem;
+    
+}
+img{
+    object-fit: cover;
+}
+
+
+.icons-container {
+    display: flex;
+    justify-content: center;
+    align-content: space-between;
+    flex-wrap: wrap;
+    padding:0.5rem 0;
+}
+.icon-wrapper{
+    border: 1px dotted slategray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 0.5rem;
+    min-width: 8rem;
+    position: relative;
+    color: gray;
+
+}
+
+.icon-wrapper span{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.clipboard-button{
+    min-width: 2rem;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    border-radius: 0.5rem;
+    color: lightblue;
+    background-color: #b09ea4;
+    cursor: pointer;
+    border-width: 1px;
+    border-color: slategray;
+}
