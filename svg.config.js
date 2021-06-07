@@ -1,7 +1,5 @@
-// Personal configurations
-let path = require('path')
 const SpriteLoaderPlugin = require(`svg-sprite-loader/plugin`)
-
+const path = require('path')
   // Options used by svgo-loader to optimize SVG files
   // https://github.com/svg/svgo#what-it-can-do
   const SVGOoptions = {
