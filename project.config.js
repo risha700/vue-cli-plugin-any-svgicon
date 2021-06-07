@@ -2,7 +2,51 @@
 let path = require('path')
 const SpriteLoaderPlugin = require(`svg-sprite-loader/plugin`)
 
+  // Options used by svgo-loader to optimize SVG files
+  // https://github.com/svg/svgo#what-it-can-do
+  const SVGOoptions = {
+    "plugins": [
 
+      { "cleanupAttrs": true },
+      { "cleanupEnableBackground": true },
+      { "cleanupIDs": true },
+      { "cleanupListOfValues": true },
+      { "cleanupNumericValues": true },
+      { "collapseGroups": true },
+      { "convertColors": true },
+      { "convertPathData": true },
+      { "convertShapeToPath": true },
+      { "convertStyleToAttrs": true },
+      { "convertTransform": true },
+      { "mergePaths": true },
+      { "removeComments": true },
+      { "removeDesc": true },
+      { "removeDimensions": true },
+      { "removeDoctype": true },
+      { "removeEditorsNSData": true },
+      { "removeEmptyAttrs": true },
+      { "removeEmptyContainers": true },
+      { "removeEmptyText": true },
+      { "removeHiddenElems": true },
+      { "removeMetadata": true },
+      { "removeNonInheritableGroupAttrs": true },
+      { "removeRasterImages": true },
+      { "removeTitle": true },
+      { "removeUnknownsAndDefaults": true },
+      { "removeUselessDefs": true },
+      { "removeUnusedNS": true },
+      { "removeUselessStrokeAndFill": true },
+      {
+        "removeAttrs": { "attrs": ["fill","stroke","stoke-width"]}
+      },
+      { "removeXMLProcInst": true },
+      { "removeStyleElement": true },
+      { "removeUnknownsAndDefaults": true},
+      { "sortAttrs": true },
+    ]
+  };
+
+  
 function configSVGIcon(config, iconsFolder) {
   // Exclude SVG sprite directory from default svg rule
   config.module
@@ -10,67 +54,16 @@ function configSVGIcon(config, iconsFolder) {
     .exclude.add(path.resolve(__dirname, iconsFolder))
     .end();
 
-  // Options used by svgo-loader to optimize SVG files
-  // https://github.com/svg/svgo#what-it-can-do
-  const options = {
-      "plugins": [
 
-        { "cleanupAttrs": true },
-        { "cleanupEnableBackground": true },
-        { "cleanupIDs": true },
-        { "cleanupListOfValues": true },
-        { "cleanupNumericValues": true },
-        { "collapseGroups": true },
-        { "convertColors": true },
-        { "convertPathData": true },
-        { "convertShapeToPath": true },
-        { "convertStyleToAttrs": true },
-        { "convertTransform": true },
-        { "mergePaths": true },
-        { "removeComments": true },
-        { "removeDesc": true },
-        { "removeDimensions": true },
-        { "removeDoctype": true },
-        { "removeEditorsNSData": true },
-        { "removeEmptyAttrs": true },
-        { "removeEmptyContainers": true },
-        { "removeEmptyText": true },
-        { "removeHiddenElems": true },
-        { "removeMetadata": true },
-        { "removeNonInheritableGroupAttrs": true },
-        { "removeRasterImages": true },
-        { "removeTitle": true },
-        { "removeUnknownsAndDefaults": true },
-        { "removeUselessDefs": true },
-        { "removeUnusedNS": true },
-        { "removeUselessStrokeAndFill": true },
-        {
-          "removeAttrs": { "attrs": ["fill","stroke","stoke-width"]}
-        },
-        { "removeXMLProcInst": true },
-        { "removeStyleElement": true },
-        { "removeUnknownsAndDefaults": true},
-        { "sortAttrs": true },
-
-
-      ]
-    };
 
    config.plugin('SpriteLoaderPlugin')
-    .use(new SpriteLoaderPlugin({
-      // plainSprite: true,
-      // spriteAttrs: {
-      //     pathLength:1,
-      //   // id: 'my-custom-sprite-id'
-      // }
-    })
-    )
+    .use(new SpriteLoaderPlugin()).end()
   // Include only SVG sprite directory for new svg-icon rule
   // Use svg-sprite-loader to build SVG sprite
   // Use svgo-loader to optimize SVG files
   config.module
     .rule('svg-icon')
-    .test(/\.svg$/)
+    .test(/\/.*\.svg/)
     .include.add(path.resolve(__dirname, iconsFolder))
     .end()
     .use('svg-sprite-loader')
@@ -78,13 +71,13 @@ function configSVGIcon(config, iconsFolder) {
     .options({
       symbolId: 'icon-[name]',
       extract: true, // if requiring single files
-      // spriteFilename: 'sprite[hash].svg'
-
+      // spriteFilename: 'sprite[hash].svg',
+      // publicPath:'/dist/'
     })
     .end()
     .use('svgo-loader')
     .loader('svgo-loader')
-    .options(options)
+    .options(SVGOoptions)
     .end();
 }
 

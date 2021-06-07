@@ -1,6 +1,6 @@
-// const { configSVGIcon } = require('../project.config')
 
-module.exports = (api, options) => {
+
+module.exports = (api) => {
     api.extendPackage({
         devDependencies:{
             "svg-sprite-loader": "^5.0.0",
@@ -8,17 +8,11 @@ module.exports = (api, options) => {
             "node-sass": "^4.12.0",
             "sass-loader": "^8.0.2"
         },
-        scripts:{
-
-        },
-        // vue:{
-        //     publicPath:'',
-        //     chainWebpack: config => {configSVGIcon(config, '../src/assets/svg_icons')}
-        // }
+        scripts:{},
+        vue:{}
     })
 
     api.render('./template')
-    api.injectImports(api.entryFile, `import SvgIcon from '@/components/SvgIcon.vue'`)
 
 }
 
@@ -35,7 +29,12 @@ module.exports.hooks = (api) => {
         lines[renderIndex] += `${EOL} app.component('SvgIcon', SvgIcon)`
         lines[renderIndex] += `${EOL} app.mount('#app')`
       }
-
       fs.writeFileSync(api.resolve(api.entryFile), lines.join(EOL), { encoding: 'utf-8' })
+
+
+
     })
+
+    
   }
+
