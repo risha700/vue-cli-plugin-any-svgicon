@@ -5,7 +5,9 @@ const express = require('express')
 const fs = require('fs')
 const hostname = '127.0.0.1';
 let port = 3000;
-const folderPath = path.join(__dirname, '../src/assets/svg_icons')
+const wrote_file = path.resolve(__dirname, 'iconFolderPath')
+const IconFolderPath = fs.readFileSync(wrote_file, { encoding: 'utf-8' })
+const folderPath = IconFolderPath
 
 let svgIcons = []
 fs.readdirSync(folderPath).map(fileName => {

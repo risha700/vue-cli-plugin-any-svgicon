@@ -37,7 +37,9 @@ export default {
 computed: {
 name() {
   let icon = this.iconName
-  return require(`@/assets/svg_icons/${icon}.svg`).default
+  let IconFolder = "<%= IconFolderPath %>"
+
+  return require(`@/assets/${IconFolder}/${icon}.svg`).default
   // return icon ? `#icon-${icon}` : ''
 
 },

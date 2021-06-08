@@ -1,13 +1,17 @@
 const spawn = require('cross-spawn');
 const defaults = require('../defaults');
 const fs = require('fs')
+const path = require('path')
+
 
 module.exports = (api, options) => {
-    console.log('options', options);
-
     const IconFolderPath = options.IconFolderPath || defaults.IconFolderPath
+    const dir_path = `${api.resolve('src/assets')}/${IconFolderPath}`
 
-    const expressServerJs = api.resolve('node_modules/vue-cli-plugin-any-svgicon/icon_viewer/icon_viewer_server.js')
+    const write_file = path.resolve(path.join(__dirname, 'iconFolderName'))
+    fs.writeFileSync(write_file, IconFolderPath, {flag: 'w+'}, err => {}) 
+    
+    const expressServerJs = api.resolve(`node_modules/${api.id}/icon_viewer/icon_viewer_server.js`)
     api.extendPackage({
         devDependencies:{
             "svg-sprite-loader": "^5.0.0",
@@ -21,14 +25,10 @@ module.exports = (api, options) => {
         // vue:{}
     })
 
-    api.render('./template')
+    api.render('./template', {IconFolderPath: IconFolderPath})
     api.injectImports(api.entryFile, `import SvgIcon from '@/components/SvgIcon.vue'`)
 
-    try{
-      fs.mkdirSync(api.resolve(IconFolderPath))
-      api.exitLog(`${IconFolderPath} directory created successfully`)
-    }catch(e){api.exitLog(`${IconFolderPath} directory was not created, probably it exists! or ${e}`)}
-    
+    fs.mkdirSync(dir_path)
     
     const starterIconsPath = api.resolve('node_modules/vue-cli-plugin-any-svgicon/starter_icons')
     const starterIcons = fs.readdirSync(starterIconsPath,{encoding:'utf8', flag:'r'})
@@ -37,7 +37,7 @@ module.exports = (api, options) => {
         if (Object.hasOwnProperty.call(starterIcons, icon)) {
             const element = starterIcons[icon];
             if(!element.startsWith('.'))
-            fs.copyFileSync(`${starterIconsPath}/${element}`, `${api.resolve(IconFolderPath)}/${element}`)
+            fs.copyFileSync(`${starterIconsPath}/${element}`, `${dir_path}/${element}`)
         }
       }
     }
@@ -47,7 +47,7 @@ module.exports = (api, options) => {
 }
 
 module.exports.hooks = (api) => {
-  const { EOL } = require('os')
+  const { EOL, tmpdir } = require('os')
   api.afterInvoke(() => {
       const contentMain = fs.readFileSync(api.resolve(api.entryFile), { encoding: 'utf-8' })
       const lines = contentMain.split(/\r?\n/g)

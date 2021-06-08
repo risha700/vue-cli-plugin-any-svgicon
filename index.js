@@ -1,12 +1,25 @@
-
+// const defaults = require('./defaults');
+const path = require('path')
+const fs = require('fs');
 module.exports = (api, options) => {
-  
-    // const { configSVGIcon } = require(api.resolve('node_modules/vue-cli-plugin-any-svgicon/project.config.js')) 
-    //TODO:// set it from prompts
+
+    const wrote_file = path.resolve(path.join(__dirname, 'generator/iconFolderName'))
+    const IconFolderPath = fs.readFileSync(wrote_file, { encoding: 'utf-8' })
+    const dir_path = `${api.resolve('src/assets')}/${IconFolderPath}`
     const { configSVGIcon } = require('./svg.config.js')
+
+    const write_file = path.resolve(path.join(__dirname, './icon_viewer/iconFolderPath'))
+    fs.writeFileSync(write_file, dir_path, {flag: 'w+'}, err => {}) 
 
     api.chainWebpack(webpackConfig => {
         // configSVGIcon(webpackConfig, api.resolve('node_modules/vue-cli-plugin-any-svgicon/generator/template/assets/svg_icons'))
-        configSVGIcon(webpackConfig, api.resolve('src/assets/svg_icons'))
+        configSVGIcon(webpackConfig, dir_path)
       })
+
+    api.configureWebpack(config=>{
+      Object.assign(config.module, {exprContextCritical: false})
+      // Object.assign(config.module, {noParse: /\/native-require.js$/})
+      // Object.assign(config.stats, {warningsFilter: [/critical dependency:/i]})
+
+    })
 } 

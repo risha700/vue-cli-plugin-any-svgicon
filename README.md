@@ -12,7 +12,7 @@
 vue add vue-cli-plugin-any-svgicon
  ```
  ## Next:
--  You will be propmt to choose a folder to place your chosen svg icons that will be  available for you to include in your vue project "only the svg you will use in the vue component will compile in the sprite sheet.
+-  You will be propmt to choose a folder name (relative to src/assets) to place your chosen svg icons that will be  available for you to include in your vue project "only the svg you will use in the vue component will compile in the sprite sheet.
 
 ## preview your chosen icons
 
