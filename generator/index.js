@@ -25,6 +25,7 @@ module.exports = (api, options) => {
 
     api.render('./template', {IconFolderPath: IconFolderPath})
     api.injectImports(api.entryFile, `import SvgIcon from '@/components/SvgIcon.vue'`)
+
     try{fs.mkdirSync(dir_path)}catch{}
     const starterIconsPath = api.resolve(`node_modules/${api.id}/starter_icons`)
     const starterIcons = fs.readdirSync(starterIconsPath,{encoding:'utf8', flag:'r'})
@@ -49,10 +50,17 @@ module.exports.hooks = (api) => {
       const lines = contentMain.split(/\r?\n/g)
       const previously_declared = lines.findIndex(line => line.match(/(const app)/))
       const renderIndex = lines.findIndex(line => line.match(/mount/))
+      let [, ...appline] = lines[renderIndex].split('.')
       if(previously_declared === -1){
         lines[renderIndex] = `const app = createApp(App)`
+        for (const key in appline) {
+          if (Object.hasOwnProperty.call(appline, key)) {
+            const opt = appline[key];
+            lines[renderIndex] += `${EOL} app.${opt}`
+          }
+        }
         lines[renderIndex] += `${EOL} app.component('SvgIcon', SvgIcon)`
-        lines[renderIndex] += `${EOL} app.mount('#app')`
+        // lines[renderIndex] += `${EOL} app.mount('#app')`
       }
       fs.writeFileSync(api.resolve(api.entryFile), lines.join(EOL), { encoding: 'utf-8' })
 
