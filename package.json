@@ -1,7 +1,7 @@
 {
   "name": "vue-cli-plugin-any-svgicon",
-  "version": "1.0.0",
-  "description": "...",
+  "version": "1.1.0",
+  "description": "vue-cli plugin util for custom svg icons processing",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +14,8 @@
   "author": "risha700",
   "license": "MIT",
   "devDependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
     "svg-sprite-loader": "^5.0.0",
     "webpack": "^4.0.0"
   },

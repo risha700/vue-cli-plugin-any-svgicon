@@ -9,7 +9,6 @@ module.exports = (api, options) => {
 
     const write_file = path.resolve(path.join(__dirname, 'iconFolderName'))
     fs.writeFileSync(write_file, IconFolderPath, {flag: 'w+'}, err => {}) 
-    
     const expressServerJs = api.resolve(`node_modules/${api.id}/icon_viewer/icon_viewer_server.js`)
     api.extendPackage({
         devDependencies:{
@@ -26,10 +25,8 @@ module.exports = (api, options) => {
 
     api.render('./template', {IconFolderPath: IconFolderPath})
     api.injectImports(api.entryFile, `import SvgIcon from '@/components/SvgIcon.vue'`)
-
-    fs.mkdirSync(dir_path)
-    
-    const starterIconsPath = api.resolve('node_modules/vue-cli-plugin-any-svgicon/starter_icons')
+    try{fs.mkdirSync(dir_path)}catch{}
+    const starterIconsPath = api.resolve(`node_modules/${api.id}/starter_icons`)
     const starterIcons = fs.readdirSync(starterIconsPath,{encoding:'utf8', flag:'r'})
     if(starterIcons.length){
       for (const icon in starterIcons) {
@@ -66,24 +63,9 @@ module.exports.hooks = (api) => {
 
     api.onCreateComplete(() => {
       // system link node_modules
-      const ProjectNodeModulesPath = api.resolve('node_modules')
-      const pluginInstallPath = api.resolve('node_modules/vue-cli-plugin-any-svgicon')
-      
-      fs.rmdirSync(`${pluginInstallPath}/node_modules`,{recursive: true})
-      fs.symlinkSync(ProjectNodeModulesPath, `${pluginInstallPath}/node_modules`, 'dir')
-
-      // spawn.sync('ln', [
-      //   'sfnv',
-      //  `${ProjectNodeModulesPath}/`,
-      //   pluginInstallPath
-      // ], {
-      //   env: process.env,
-      //   stdio: 'inherit', // pipe to console
-      //   encoding: 'utf-8'
-      // })
-   
-
-
+      const ProjectTargetPath = api.resolve('')
+      const SvgConfigPath = path.join(__dirname, '../svg-icon.config.js')
+        fs.copyFileSync(SvgConfigPath, `${ProjectTargetPath}/svg-icon.config.js`, 0, (e)=>{})
     })
     
   }
