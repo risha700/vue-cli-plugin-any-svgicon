@@ -76,7 +76,7 @@ function configSVGIcon(config, iconsFolder) {
     .end()
     .use('svgo-loader')
     .loader('svgo-loader')
-    .options(SVGOoptions)
+    .options(SVGOoptions)//turn it on and off as needed
     .end();
 }
 
