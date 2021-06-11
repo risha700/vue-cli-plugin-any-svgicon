@@ -8,50 +8,62 @@
     <link rel="stylesheet" href="./styles.css" type="text/css">
 </head>
 <body>
+    <span id='github-star'>
+        <iframe src="https://ghbtns.com/github-btn.html?user=risha700&repo=vue-cli-plugin-any-svgicon&type=star&count=false&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
+    </span>
     <section class="hero">
         <h3 class="hero-title">Vue Icons Preview</h3>
-        <input type="search" placeholder="Search for icon..." id="search-input" autofocus>
+        <input type="search" placeholder="Loading icons..." id="search-input" autofocus>
     </section>
-    <div id="results-container" class="icons-container" style="background-color: #D8C3B1;">
-
-    </div>
-    <div class="icons-container">
-        <% for(var i=0; i < icons.length; i++) { %>
-            <div class="icon-wrapper">
-                <span><%= icons[i].split('/')[1].split('.')[0] %></span>
-                <!-- <img src="<%= icons[i] %>" alt="<%= icons[i] %>"> -->
-                <!-- <svg>
-                    <use xlink:href="<%= icons[i] %>" style="--color_fill:red;"></use>
-                </svg> -->
-                <object data="<%= icons[i] %>" class="svg-object"> </object>
-                <!-- <embed src="<%= icons[i] %>" class='embeded-svg'/> -->
-            </div>
-        <% } %>
-    </div>
+    <div id="results-container" class="icons-container" style="background-color: #D8C3B1;"></div>
 
     <script>
-        let placeholder = <%- JSON.stringify(icons) %>;
-        let icons =[]
+
         let search_results = []
         let results_container = document.getElementById('results-container')
         let search_input = document.getElementById('search-input')
-        const limit_count = 5
-        placeholder.forEach(element => {
-            icons.push({name:element.split('/')[1].split('.')[0], path:element})
-        });
-        
-        delete placeholder
-        let svg_objecst = document.getElementsByClassName('svg-object')
-        const forceStylingObjSvg = (svg)=>{
-            var svgDoc = svg.contentDocument;
-            svgDoc.firstElementChild.setAttribute('fill','#B68E6D')
-        }
-        Array.from(svg_objecst).forEach((obj)=>{
-            obj.addEventListener('load',()=>forceStylingObjSvg(obj))
-            })
         const SearchFilter= <%- include('./search.js') %>;
         
-        new SearchFilter(icons, search_input, results_container, 20).init()
+        function createIconContainer(){
+            icon_container = document.createElement('div')
+            icon_container.setAttribute('class', 'icons-container')
+            document.body.appendChild(icon_container)
+            return icon_container
+        }
+
+        function createIconMarkup(icon, container){
+            let icon_wrapper = document.createElement('div')
+            icon_wrapper.setAttribute('class', 'icon-wrapper')
+            let icon_name = document.createElement('span')
+            let icon_obj= document.createElement('img')
+            icon_name.innerHTML = icon.name
+            icon_obj.setAttribute('src', icon.static_url)
+            icon_wrapper.appendChild(icon_name)
+            icon_wrapper.appendChild(icon_obj)
+            // icon_obj.addEventListener('load',()=>{forceStylingObjSvg(icon_obj)})
+            container.appendChild(icon_wrapper)
+
+        }
+        const forceStylingObjSvg = (svg)=>{
+            // refrain from html objects for performance
+            svg.contentDocument.firstElementChild.setAttribute('fill','#B68E6D')
+        }
+
+        (async function(){
+
+            let data = await fetch('icons')
+            let {icons} = await data.json()
+
+            search_input.setAttribute('placeholder', `Search ${icons.length} icons...`)
+
+            let container = createIconContainer()
+            icons.map((icon) => {createIconMarkup(icon, container)});
+            new SearchFilter(icons, search_input, results_container).init()
+
+
+
+        })();
+
 
 
       </script>

@@ -76,3 +76,9 @@ img{
     border-width: 1px;
     border-color: slategray;
 }
+
+#github-star{
+    position: absolute;
+    top: 1rem;
+    right: 0;
+}

@@ -1,56 +1,42 @@
 
 class SearchFilter{
-    constructor(icons_arr, search_input, results_container, limit=5, search_results=[]){
+    constructor(icons_arr, search_input, results_container, search_results=[]){
         this.icons_arr = icons_arr
         this.search_input = search_input
         this.search_results = search_results
         this.results_container = results_container
-        this.limit = limit
+
     }
 
     init(){
         this.search_input.addEventListener('input', ()=>{
-            if(this.search_input.value == '')this.removeAllChildNodes(results_container);
-            
-            if (this.search_results.length >= limit_count){
-                this.search_results.splice(0, this.search_results.length-limit_count)//undefiend
-                this.cleanUpResults()
-            }
-            if(this.search_input.value != '')this.findMatch(this.search_input.value);
-
+            if(this.search_input.value.length === 0)this.removeAllChildNodes(results_container);
+            if(this.search_input.value.length > 0)this.findMatch(this.search_input.value);
         })
         let icon_wrappers = document.getElementsByClassName('icon-wrapper')
         this.addClipboard(icon_wrappers)
     }
 
     findMatch(value){
+        this.cleanupResults()
         this.icons_arr.map((icon)=>{
-            if (icon.name.includes(value) && !this.search_results.includes(icon))//regex better
+            if (icon.name.includes(value))//regex better
             this.search_results.push(icon)
         })    
-           //plot match
         this.plotMatches()
-        // this.cleanUpResults()
 
     }
 
 
 
     plotMatches(){
-        this.search_results.slice(Math.max(this.search_results.length - limit_count, 1)
-        ).forEach((icon)=>{
+        this.search_results.forEach((icon)=>{
             let result_div = document.createElement('div')
             result_div.setAttribute('class', 'icon-wrapper')
             let result_img = document.createElement('img')
              result_div.innerHTML = icon.name
-             result_img.setAttribute('src', icon.path)
+             result_img.setAttribute('src', icon.static_url)
              result_div.appendChild(result_img)
-            //  removeAllChildNodes(results_container)
-             // cleanup
-             this.results_container.childNodes.forEach((child)=>{
-                child.innerText == icon.name ? this.results_container.removeChild(child):null
-            })
-
             this.results_container.appendChild(result_div)
             this.addClipboard([result_div])
 
@@ -65,12 +51,9 @@ class SearchFilter{
         }
     }
 
-    cleanUpResults(){
-        if(this.results_container.childElementCount > limit_count){
-        for (let index = 0; index < this.results_container.childElementCount; index++) {
-            this.results_container.removeChild(this.results_container.childNodes[index])
-            }
-        }
+    cleanupResults(){
+        this.search_results = []
+        this.removeAllChildNodes(this.results_container)
     }
 
     // clipboard
