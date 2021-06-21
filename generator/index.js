@@ -9,6 +9,10 @@ module.exports = (api, options) => {
 
     const write_file = path.resolve(path.join(__dirname, 'iconFolderName'))
     fs.writeFileSync(write_file, IconFolderPath, {flag: 'w+'}, err => {}) 
+    
+    const viewer_file = `${path.resolve(path.join(__dirname, '../icon_viewer'))}/iconFolderPath`
+    fs.writeFileSync(viewer_file,`${api.resolve('src/assets')}/${IconFolderPath}`, {flag: 'w+'}, err => {}) 
+
     const expressServerJs = api.resolve(`node_modules/${api.id}/icon_viewer/icon_viewer_server.js`)
     api.extendPackage({
         devDependencies:{

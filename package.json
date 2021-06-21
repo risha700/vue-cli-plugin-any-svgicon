@@ -1,6 +1,6 @@
 {
   "name": "vue-cli-plugin-any-svgicon",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "vue-cli plugin util for custom svg icons processing",
   "main": "index.js",
   "scripts": {
