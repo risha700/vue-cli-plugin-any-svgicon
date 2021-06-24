@@ -54,7 +54,7 @@ function configSVGIcon(config, iconsFolder, extract) {
     .end();
     
    config.plugin('SpriteLoaderPlugin')
-    .use(new SpriteLoaderPlugin()).end()
+    .use(new SpriteLoaderPlugin({plainSprite: true})).end()
   // Include only SVG sprite directory for new svg-icon rule
   // Use svg-sprite-loader to build SVG sprite
   // Use svgo-loader to optimize SVG files
@@ -68,6 +68,10 @@ function configSVGIcon(config, iconsFolder, extract) {
     .options({
       symbolId: 'icon-[name]',
       extract:JSON.parse(extract), 
+      // runtimeGenerator:path.resolve('./runtimeGenerator'),
+      // runtimeOptions:{
+      //   iconModule:'./src/components/SvgIcon.vue'
+      // }
       // spriteFilename: 'sprite[hash].svg',
       // publicPath:'/dist/'
     })
