@@ -2,16 +2,16 @@ const defaults = require('../defaults');
 const fs = require('fs')
 const path = require('path')
 
-
 module.exports = (api, options) => {
     const IconFolderPath = options.IconFolderPath || defaults.IconFolderPath
-    const dir_path = `${api.resolve('src/assets')}/${IconFolderPath}`
-
-    const write_file = path.resolve(path.join(__dirname, 'iconFolderName'))
-    fs.writeFileSync(write_file, IconFolderPath, {flag: 'w+'}, err => {}) 
-    
-    const viewer_file = `${path.resolve(path.join(__dirname, '../icon_viewer'))}/iconFolderPath`
-    fs.writeFileSync(viewer_file,`${api.resolve('src/assets')}/${IconFolderPath}`, {flag: 'w+'}, err => {}) 
+    const ExtractSprite = options.ExtractSprite
+    const VUE_APP_SVG_FOLDERPATH =`${api.resolve('src/assets')}/${IconFolderPath}`
+    const env_loc = `${path.resolve(path.join(__dirname, '../.env'))}`
+    fs.writeFileSync(env_loc, 
+`
+VUE_APP_SVG_FOLDERPATH=${api.resolve('src/assets')}/${IconFolderPath}
+VUE_APP_EXTRACT_SPRITE=${ExtractSprite}
+      `, {flag: 'w+'}, err => {}) 
 
     const expressServerJs = api.resolve(`node_modules/${api.id}/icon_viewer/icon_viewer_server.js`)
     api.extendPackage({
@@ -27,10 +27,10 @@ module.exports = (api, options) => {
         // vue:{}
     })
 
-    api.render('./template', {IconFolderPath: IconFolderPath})
+    api.render('./template', {IconFolderPath: IconFolderPath, ExtractSprite:ExtractSprite})
     api.injectImports(api.entryFile, `import SvgIcon from '@/components/SvgIcon.vue'`)
 
-    try{fs.mkdirSync(dir_path)}catch{}
+    try{fs.mkdirSync(VUE_APP_SVG_FOLDERPATH)}catch{}
     const starterIconsPath = api.resolve(`node_modules/${api.id}/starter_icons`)
     const starterIcons = fs.readdirSync(starterIconsPath,{encoding:'utf8', flag:'r'})
     if(starterIcons.length){
@@ -38,7 +38,7 @@ module.exports = (api, options) => {
         if (Object.hasOwnProperty.call(starterIcons, icon)) {
             const element = starterIcons[icon];
             if(!element.startsWith('.'))
-            fs.copyFileSync(`${starterIconsPath}/${element}`, `${dir_path}/${element}`)
+            fs.copyFileSync(`${starterIconsPath}/${element}`, `${VUE_APP_SVG_FOLDERPATH}/${element}`)
         }
       }
     }
@@ -47,8 +47,9 @@ module.exports = (api, options) => {
     
 }
 
-module.exports.hooks = (api) => {
+module.exports.hooks = (api, options) => {
   const { EOL, tmpdir } = require('os')
+  const IconFolderPath = options.IconFolderPath || defaults.IconFolderPath
   api.afterInvoke(() => {
       const contentMain = fs.readFileSync(api.resolve(api.entryFile), { encoding: 'utf-8' })
       const lines = contentMain.split(/\r?\n/g)
@@ -64,6 +65,9 @@ module.exports.hooks = (api) => {
           }
         }
         lines[renderIndex] += `${EOL} app.component('SvgIcon', SvgIcon)`
+        lines[renderIndex] +=`${EOL}const requireAll = requireContext => requireContext.keys().forEach(requireContext)`
+        lines[renderIndex] +=`${EOL}requireAll(require.context('@/assets/${IconFolderPath}', true, /\.svg$/))`
+        
         // lines[renderIndex] += `${EOL} app.mount('#app')`
       }
       fs.writeFileSync(api.resolve(api.entryFile), lines.join(EOL), { encoding: 'utf-8' })
@@ -74,10 +78,11 @@ module.exports.hooks = (api) => {
     })
 
     api.onCreateComplete(() => {
-      // system link node_modules
-      const ProjectTargetPath = api.resolve('')
-      const SvgConfigPath = path.join(__dirname, '../svg-icon.config.js')
+        const ProjectTargetPath = api.resolve('')
+        const SvgConfigPath = path.join(__dirname, '../svg-icon.config.js')
+        const envPath = path.join(__dirname, '../.env')
         fs.copyFileSync(SvgConfigPath, `${ProjectTargetPath}/svg-icon.config.js`, 0, (e)=>{})
+        fs.copyFileSync(envPath, `${ProjectTargetPath}/.env`, 0, (e)=>{})
     })
     
   }

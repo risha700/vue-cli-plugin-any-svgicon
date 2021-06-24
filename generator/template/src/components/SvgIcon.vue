@@ -1,6 +1,6 @@
 <template>
   <svg :class="svgClass" aria-hidden="true">
-    <use :href="name"></use>
+    <use :href="icon"></use>
       <linearGradient id="gradient-horizontal">
         <stop offset="0%" stop-color="var(--color-stop-1)" />
         <stop offset="50%" stop-color="var(--color-stop-2)" />
@@ -15,48 +15,51 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import {computed, h, ref} from "vue";
 export default {
   name: "SvgIcon",
-  props: {
-    iconName: {
-      // icon filename
-      // type: String,
-      required: true,
+    props: {
+      iconName: {
+        required: true,
+      },
+      className: {
+        type: String,
+        required: false
+      },
+      outline:{
+        type:Boolean,
+        require: false,
+        default: false
+      }
+
     },
-    className: {
-      // css class name
-      type: String,
-      required: false
-    },
-    outline:{
-      type:Boolean,
-      require:false
-    }
+    setup(props){
+      let icon = ref(null)
+      let svgClass = computed(()=>{
+        let className = props.className
+        if(props.outline){
+          className += ' outlined '
+        }
+        return className ? `svg-icon ${className}` : 'svg-icon '
+      })
+      // eslint-disable-next-line no-unused-vars
+      // let IconFolder = "<%= IconFolderPath %>"
+      const ExtractSprite = "<%= ExtractSprite %>"
+      // icon.value =  require(`@/assets/${IconFolder}/${props.iconName}.svg`).default
+      icon.value =JSON.parse(ExtractSprite)? `sprite.svg#icon-${props.iconName}`: `#icon-${props.iconName}`
+      
+      return{svgClass, icon}
 
-},
-computed: {
-name() {
-  let icon = this.iconName
-  let IconFolder = "<%= IconFolderPath %>"
-
-  return require(`@/assets/${IconFolder}/${icon}.svg`).default
-  // return icon ? `#icon-${icon}` : ''
-
-},
-svgClass() {
-  let className = this.className
-  let outlined = this.outline
-  if(outlined){
-    className += ' outlined '
+    //   return () => h('svg',  {viewBox:icon.value.viewBox, class:svgClass.value,'aria-hidden':true, ...props},[
+    //     h('use', {'href':icon.value.url})
+    // ])
   }
-  return className ? `svg-icon ${className}` : 'svg-icon '
-},
 
-},
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .outlined{
   fill:none;
   stroke-width: 1;

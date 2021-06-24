@@ -1,20 +1,13 @@
-const path = require('path')
-const fs = require('fs');
-
-
 module.exports = (api, options) => {
-    const wrote_file = path.resolve(path.join(__dirname, 'generator/iconFolderName'))
-    const IconFolderPath = fs.readFileSync(wrote_file, { encoding: 'utf-8' })
-    const dir_path = `${api.resolve('src/assets')}/${IconFolderPath}`
     const { configSVGIcon } = require(api.resolve('svg-icon.config.js'))
     api.chainWebpack(webpackConfig => {
-        configSVGIcon(webpackConfig, dir_path)
+      // it will read first time from generator and then from target .env subsequently
+        configSVGIcon(webpackConfig,
+           process.env.VUE_APP_SVG_FOLDERPATH,
+           process.env.VUE_APP_EXTRACT_SPRITE) 
       })
 
     api.configureWebpack(config=>{
       Object.assign(config.module, {exprContextCritical: false})
-      // Object.assign(config.module, {noParse: /\/native-require.js$/})
-      // Object.assign(config.stats, {warningsFilter: [/critical dependency:/i]})
-
     })
 } 

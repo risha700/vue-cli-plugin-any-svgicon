@@ -46,15 +46,13 @@ const path = require('path')
   };
 
   
-function configSVGIcon(config, iconsFolder) {
+function configSVGIcon(config, iconsFolder, extract) {
   // Exclude SVG sprite directory from default svg rule
   config.module
     .rule('svg')
     .exclude.add(path.resolve(__dirname, iconsFolder))
     .end();
-
-
-
+    
    config.plugin('SpriteLoaderPlugin')
     .use(new SpriteLoaderPlugin()).end()
   // Include only SVG sprite directory for new svg-icon rule
@@ -69,14 +67,14 @@ function configSVGIcon(config, iconsFolder) {
     .loader('svg-sprite-loader')
     .options({
       symbolId: 'icon-[name]',
-      extract: true, // if requiring single files
+      extract:JSON.parse(extract), 
       // spriteFilename: 'sprite[hash].svg',
       // publicPath:'/dist/'
     })
     .end()
     .use('svgo-loader')
     .loader('svgo-loader')
-    .options(SVGOoptions)//turn it on and off as needed
+    .options(SVGOoptions)// turn it on and off as neededs
     .end();
 }
 

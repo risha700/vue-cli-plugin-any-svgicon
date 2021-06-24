@@ -1,13 +1,19 @@
-
-const http = require('http');
 const path = require('path')
 const express = require('express')
 const fs = require('fs')
 const hostname = '127.0.0.1';
 let port = 3000;
-const wrote_file = path.resolve(__dirname, 'iconFolderPath')
-const IconFolderPath = fs.readFileSync(wrote_file, { encoding: 'utf-8' })
-const folderPath = IconFolderPath
+
+
+function getSvgFolderPath(){
+  const env_loc = `${path.resolve(path.join(__dirname, '../.env'))}`
+  const env_contents = fs.readFileSync(env_loc, { encoding: 'utf-8' })
+  const lines = env_contents.split(/\r?\n/g)
+  const icon_path = lines.findIndex(line => line.match(/(VUE_APP_SVG_FOLDERPATH)/))
+  return lines[icon_path].split('=')[1]
+}
+
+const folderPath = getSvgFolderPath()
 const util = require('util');
 
 
@@ -46,4 +52,4 @@ app.use('/static', express.static(folderPath))
 app.use('', express.static(__dirname))
 
 app.listen(port)
-console.log(`Running at http://localhost:${port}`);
+console.log(`Running at http://${hostname}:${port}`);
