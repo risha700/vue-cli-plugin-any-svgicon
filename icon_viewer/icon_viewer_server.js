@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
 const fs = require('fs')
-const { copyFile, unlink } = require('fs/promises')
+const { copyFile, unlink, stat } = require('fs/promises')
 const bodyParser = require('body-parser');
 var jsonParser = bodyParser.json()
 const hostname = '127.0.0.1';
@@ -18,6 +18,7 @@ function setSvgFolderPath(){
 setSvgFolderPath()
 
 const util = require('util');
+const e = require('express');
 
 
 const readdir = util.promisify(fs.readdir);
@@ -77,10 +78,17 @@ app.post('/delete',jsonParser, async function(request, response){
   }).catch(e=>response.json({status:'something went wrong!'}))
 
 });
+app.get('/stats', function(request, response){
+  response.setHeader('Content-Type', 'application/json');
+  stat(SpriteBundlePath).then((stats)=>{
+    response.json({size:stats.size, count:stats.nlink})
+  }).catch(e=>response.json({error:e}))
 
+});
 
 app.use('/static', express.static(SpriteBundlePath))
 app.use('/static', express.static(MoreSvgPath))
+app.use('/IconsUtils', express.static(path.join(__dirname, 'IconsUtils.js')))
 
 app.use('', express.static(__dirname))
 app.listen(port)

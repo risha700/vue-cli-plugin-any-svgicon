@@ -10,6 +10,9 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-bottom: 2px white double;
+    box-sizing: content-box;
+    box-shadow: 10px 10px 10px grey;
     
 }
 .hero-title{
@@ -44,6 +47,13 @@ img{
     flex-wrap: wrap;
     padding:0.5rem 0;
 }
+
+#results-container{
+    border: solid 2px white;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 2rem;
+    box-shadow: 10px 10px 10px #7955481f;
+}
 .icon-wrapper{
     border: 1px dotted slategray;
     display: flex;
@@ -70,7 +80,7 @@ img{
     bottom: 0;
     padding: 0;
     border-radius: 0.5rem;
-    color:#7E5C3F;
+    color:deepskyblue;
     background-color: white;
     cursor: pointer;
     margin-inline-start: 5px;
@@ -92,6 +102,26 @@ img{
 }
 #github-star{
     position: absolute;
-    top: 1rem;
+    top: 0.5rem;
     right: 0;
+}
+
+.stats{
+    position: absolute;
+    left: 0;
+    padding: 0.3rem;
+    color: deepskyblue;
+    min-width: max-content;
+    background: #1E293B;
+    border-radius: 3px;
+    margin-top: 0.1rem;
+    margin-left: 0.5rem;
+}
+.stats button{
+    min-width: 30px;
+    margin-left: 1rem;
+    border-radius: 2.8rem;
+}
+.stats button:hover{
+    cursor: pointer;
 }

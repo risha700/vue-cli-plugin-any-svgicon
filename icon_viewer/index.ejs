@@ -11,20 +11,20 @@
     <span id='github-star'>
         <iframe src="https://ghbtns.com/github-btn.html?user=risha700&repo=vue-cli-plugin-any-svgicon&type=star&count=false&size=large" frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
     </span>
+    <div class="stats" ></div>
     <section class="hero">
         <h3 class="hero-title">Vue Icons Preview</h3>
         <input type="search" placeholder="Loading icons..." id="search-input" autofocus>
     </section>
     <div id="results-container" class="icons-container" style="background-color: #D8C3B1;"></div>
 
-    <script>
+    <script type="module">
 
         let search_results = []
         let results_container = document.getElementById('results-container')
         let search_input = document.getElementById('search-input')
         let filter_instance
-
-        const SearchFilter= <%- include('./search.js') %>;
+        import SearchFilter from './search.js'
         
         function createIconContainer(){
             let icon_container = document.createElement('div')
@@ -79,8 +79,6 @@
             
             icons.map((icon) => {createIconMarkup(icon, container)});
             src_only_icons.map((icon) => {createIconMarkup(icon, container, true)});
-            
-
 
         })();
 

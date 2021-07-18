@@ -36,7 +36,7 @@ const path = require('path')
       { "removeUnusedNS": true },
       { "removeUselessStrokeAndFill": true },
       {
-        "removeAttrs": { "attrs": ["fill","stroke","stoke-width"]}
+        "removeAttrs": { "attrs": ["fill","stroke","stoke-width", "class"]}
       },
       { "removeXMLProcInst": true },
       { "removeStyleElement": true },
