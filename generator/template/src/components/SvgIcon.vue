@@ -45,9 +45,9 @@ export default {
       })
       // eslint-disable-next-line no-unused-vars
       // let IconFolder = "<%= IconFolderPath %>"
-      const ExtractSprite = "<%= ExtractSprite %>"
       // icon.value =  require(`@/assets/${IconFolder}/${props.iconName}.svg`).default
-      icon.value =JSON.parse(ExtractSprite)? `sprite.svg#icon-${props.iconName}`: `#icon-${props.iconName}`
+      icon.value = JSON.parse(process.env.VUE_APP_EXTRACT_SPRITE)?
+      `sprite.svg#icon-${props.iconName}`: `#icon-${props.iconName}`
       
       return{svgClass, icon}
 

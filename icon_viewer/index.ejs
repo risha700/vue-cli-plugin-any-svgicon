@@ -22,24 +22,25 @@
         let search_results = []
         let results_container = document.getElementById('results-container')
         let search_input = document.getElementById('search-input')
+        let filter_instance
+
         const SearchFilter= <%- include('./search.js') %>;
         
         function createIconContainer(){
-            icon_container = document.createElement('div')
+            let icon_container = document.createElement('div')
             icon_container.setAttribute('class', 'icons-container')
             document.body.appendChild(icon_container)
             return icon_container
         }
 
-        function createIconMarkup(icon, container){
+        function createIconMarkup(icon, container, src=false){
             let icon_wrapper = document.createElement('div')
             icon_wrapper.setAttribute('class', 'icon-wrapper')
-            let icon_name = document.createElement('span')
             let icon_obj= document.createElement('img')
-            icon_name.innerHTML = icon.name
+            icon_wrapper.innerHTML = icon.name
             icon_obj.setAttribute('src', icon.static_url)
-            icon_wrapper.appendChild(icon_name)
             icon_wrapper.appendChild(icon_obj)
+            applyIconAttributes(icon_wrapper, src)
             // icon_obj.addEventListener('load',()=>{forceStylingObjSvg(icon_obj)})
             container.appendChild(icon_wrapper)
 
@@ -49,17 +50,36 @@
             svg.contentDocument.firstElementChild.setAttribute('fill','#B68E6D')
         }
 
+        function applyIconAttributes(elm, src=true){
+            if(src){
+                filter_instance.importToSpriteMarkup([elm])
+                elm.setAttribute('type', 'src-icon')
+
+            }else{
+                filter_instance.addClipboard([elm])
+                elm.setAttribute('type', 'sprite-icon')
+            }
+            filter_instance.addDeleteButton([elm])
+        }
         (async function(){
-
-            let data = await fetch('icons')
-            let {icons} = await data.json()
-
-            search_input.setAttribute('placeholder', `Search ${icons.length} icons...`)
-
             let container = createIconContainer()
+            let data = await fetch('icons')
+            let src_data = await fetch('src')
+            let {icons} = await data.json()
+            let {src_icons} = await src_data.json()
+            let src_only_icons = []
+            src_icons.map((s_icon) => {
+                const old_icon_index = icons.findIndex(item => item.name === s_icon.name)
+                if(old_icon_index === -1)
+                src_only_icons.push(s_icon)
+                
+            })
+            search_input.setAttribute('placeholder', `Search ${icons.length+src_icons.length} icons...`)
+            filter_instance = new SearchFilter(src_only_icons.concat(icons), search_input, results_container).init()
+            
             icons.map((icon) => {createIconMarkup(icon, container)});
-            new SearchFilter(icons, search_input, results_container).init()
-
+            src_only_icons.map((icon) => {createIconMarkup(icon, container, true)});
+            
 
 
         })();

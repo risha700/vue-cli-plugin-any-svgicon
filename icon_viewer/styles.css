@@ -59,7 +59,7 @@ img{
 
 }
 
-.icon-wrapper span{
+.icon-wrapper {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -70,13 +70,26 @@ img{
     bottom: 0;
     padding: 0;
     border-radius: 0.5rem;
-    color: lightblue;
-    background-color: #b09ea4;
+    color:#7E5C3F;
+    background-color: white;
     cursor: pointer;
-    border-width: 1px;
-    border-color: slategray;
+    margin-inline-start: 5px;
+    margin-inline-end: 5px;
+    margin-bottom: 5px;
+    /* border: 2px solid; */
+    /* box-shadow: 10px 10px 5px #aaaaaa; */
+    box-shadow: 1px 1px 1px  #aaaaaa;
 }
-
+.icon-wrapper img {
+    max-height: 50%;
+    max-width: 50%;
+}
+.delete-button {
+    left: 0;
+    color:  rgb(250, 89, 53);;
+    /* box-shadow: 1px 1px 1px rgb(250, 89, 53); */
+    /* border-color: inherit; */
+}
 #github-star{
     position: absolute;
     top: 1rem;
