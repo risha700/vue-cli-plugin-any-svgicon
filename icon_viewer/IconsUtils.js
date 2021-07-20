@@ -35,8 +35,52 @@ export default class IconsUtils{
     })
   }
 
+
+  addRenameButton(iconWrappers){
+    Array.from(iconWrappers).forEach((iconWrapper)=>{
+        const check_mark =`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><title>save changes</title><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>`
+        let uuid=Math.random().toString(36).substring(7)
+        let editBtn = document.createElement('button')
+        editBtn.setAttribute('class','clipboard-button rename-button ')
+        iconWrapper.setAttribute('id', uuid)
+        let old_name = iconWrapper.firstChild.innerText
+        editBtn.addEventListener('click', ()=>{
+          let current_instance = document.getElementById(uuid)
+          if (current_instance.firstElementChild.contentEditable==="true") {
+              editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><title>rename</title><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>`
+              this.renameIcon({fromName:old_name, toName:current_instance.firstChild.innerText})
+          }else{
+            editBtn.innerHTML = check_mark
+            this.forceSelect(current_instance.firstElementChild)
+          }
+          current_instance.firstElementChild.contentEditable = (current_instance.firstElementChild.contentEditable === "true")?false:true
+
+        })
+        editBtn.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><title>rename</title><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>`
+        iconWrapper.appendChild(editBtn)
+    })
+  }
+
+  async renameIcon({fromName, toName}){
+    let icon_data = Object.values(this.icons_arr).find(item=>item.name===fromName)
+    let old_idx = Object.values(this.icons_arr).findIndex(item=>item.name===fromName)
+    let respone = await this.postData('rename', {data:{icon:icon_data, new_name:toName}})
+    this.icons_arr[old_idx] = respone.payload
+    let containers = document.getElementsByClassName('icons-container')
+    let document_wrappers = document.querySelectorAll('.icon-wrapper')
+    Array.from(containers).forEach((container)=>{
+      document_wrappers.forEach((doc_wrap)=>{
+          if(container.contains(doc_wrap)){
+              if(doc_wrap.innerText===fromName){
+                doc_wrap.firstChild.nodeValue =  toName
+              }
+          }
+      })
+  })
+  }
+
   async deleteIcon(iconWrapper){
-    let icon_data = Object.values(this.icons_arr).find(item=>item.name===iconWrapper.innerText)
+    let icon_data = Object.values(this.icons_arr).find(item=>item.name===iconWrapper.firstChild.innerText)
     let respone = await this.postData('delete', {data:icon_data})
     let containers = document.getElementsByClassName('icons-container')
     Array.from(containers).forEach((container)=>{
@@ -61,11 +105,11 @@ export default class IconsUtils{
   }
 
   async importIcon(iconWrapper){
-    let icon_data = Object.values(this.icons_arr).find(item=>item.name===iconWrapper.innerText)
+    let icon_data = Object.values(this.icons_arr).find(item=>item.name===iconWrapper.firstChild.innerText)
     let respone = await this.postData('import', {data:icon_data})
     let containers = document.getElementsByClassName('icons-container')
     let document_wrappers = document.querySelectorAll('.icon-wrapper')
-    document_wrappers = Array.from(document_wrappers).filter((r)=>r.innerText===iconWrapper.innerText)    
+    document_wrappers = Array.from(document_wrappers).filter((r)=>r.innerText===iconWrapper.firstChild.innerText)    
     Array.from(containers).forEach((container)=>{
         document_wrappers.forEach((doc_wrap)=>{
             if(container.contains(doc_wrap)){
@@ -104,6 +148,14 @@ export default class IconsUtils{
     states_elm.appendChild(refresh_btn)
     refresh_btn.addEventListener('click', this.createStatsMarkup.bind(this), false)
 
+  }
+
+  forceSelect(node){
+    const range = document.createRange();
+    range.selectNodeContents(node);  
+    var sel=window.getSelection(); 
+    sel.removeAllRanges(); 
+    sel.addRange(range);
   }
 }
 

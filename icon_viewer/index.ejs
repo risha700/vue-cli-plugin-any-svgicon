@@ -37,7 +37,9 @@
             let icon_wrapper = document.createElement('div')
             icon_wrapper.setAttribute('class', 'icon-wrapper')
             let icon_obj= document.createElement('img')
-            icon_wrapper.innerHTML = icon.name
+            let icon_name = document.createElement('span')
+            icon_name.innerHTML = icon.name
+            icon_wrapper.appendChild(icon_name)
             icon_obj.setAttribute('src', icon.static_url)
             icon_wrapper.appendChild(icon_obj)
             applyIconAttributes(icon_wrapper, src)
@@ -60,6 +62,7 @@
                 elm.setAttribute('type', 'sprite-icon')
             }
             filter_instance.addDeleteButton([elm])
+            filter_instance.addRenameButton([elm])
         }
         (async function(){
             let container = createIconContainer()

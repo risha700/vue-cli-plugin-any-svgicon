@@ -45,7 +45,9 @@ export default class SearchFilter extends IconsUtils{
             let result_div = document.createElement('div')
             result_div.setAttribute('class', 'icon-wrapper')
             let result_img = document.createElement('img')
-            result_div.innerHTML = icon.name
+            let icon_name = document.createElement('span')
+            icon_name.innerHTML = icon.name
+            result_div.appendChild(icon_name)
             result_img.setAttribute('src', icon.static_url)
             result_div.appendChild(result_img)
             this.results_container.appendChild(result_div)
@@ -55,6 +57,8 @@ export default class SearchFilter extends IconsUtils{
                 this.addClipboard([result_div])
             }
             this.addDeleteButton([result_div])
+            this.addRenameButton([result_div])
+
          })
     }
 

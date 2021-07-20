@@ -55,7 +55,8 @@ img{
     box-shadow: 10px 10px 10px #7955481f;
 }
 .icon-wrapper{
-    border: 1px dotted slategray;
+    border: 1px solid white;
+    box-shadow: 1px 0px 2px grey;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -66,13 +67,16 @@ img{
     min-width: 8rem;
     position: relative;
     color: gray;
+    max-width: 100px;
 
 }
 
 .icon-wrapper {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
+.icon-wrapper:hover {
+    box-shadow: 2px 2px 20px #7E5C3F;
+}
 .clipboard-button{
     min-width: 2rem;
     position: absolute;
@@ -86,8 +90,6 @@ img{
     margin-inline-start: 5px;
     margin-inline-end: 5px;
     margin-bottom: 5px;
-    /* border: 2px solid; */
-    /* box-shadow: 10px 10px 5px #aaaaaa; */
     box-shadow: 1px 1px 1px  #aaaaaa;
 }
 .icon-wrapper img {
@@ -96,9 +98,13 @@ img{
 }
 .delete-button {
     left: 0;
-    color:  rgb(250, 89, 53);;
-    /* box-shadow: 1px 1px 1px rgb(250, 89, 53); */
-    /* border-color: inherit; */
+    color:  rgb(250, 89, 53);
+}
+.rename-button {
+    min-width: 2rem;
+    color:  orange;
+    bottom: 2.3rem;
+    right: 0;
 }
 #github-star{
     position: absolute;

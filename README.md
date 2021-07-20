@@ -1,12 +1,12 @@
 ## Any-Svgicon vue cli plugin
 ***
 ### 
-Is not an icon library, it is a tool to generate sprite svg from icons you will choose, although it generates heroicons collection as a starter.
-
+Is not an icon library, it is a tool to generate sprite svg from icons you will choose, although it generates heroicons collection as a starter while maintaining a backup folder to preview and import from any icons you will list.
 ## Advantages :
  - easy install "No need to setup webpack configuration".
  - ready to use vue component.
- - preview for all icons locally from your command line
+ - preview for all icons locally from your command line.
+ - import, rename, delete icons from the UI.
 
  ## Installation
  ```
@@ -23,9 +23,9 @@ vue add any-svgicon
 all svg icons in the icons folder will be bundled and injected in main.js webpack context.
 
 ### Tip:
- clean icons width and height is optional but recommended "you control it with css later", use the following script inside icons folder
+ clean icons width and height is optional but recommended "you control it with css later and svgo plugin strips out most of the attributes", use the following script inside icons folder
 ```
-foreach f in `ls`;do sed -E -i '' 's/width=.{4} height=.{4}/ /' $f ;done
+for f in `ls`;do sed -E -i '' 's/(\^width|height)=.[[:alnum:]]+[\"]/ /g' $f;done
 ```
 ## preview your chosen icons
 
