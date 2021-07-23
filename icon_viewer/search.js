@@ -1,8 +1,5 @@
 import IconsUtils from "./IconsUtils"
 
-
-
-
 export default class SearchFilter extends IconsUtils{
     constructor(icons_arr, search_input, results_container, search_results=[]){
         super()
@@ -18,7 +15,11 @@ export default class SearchFilter extends IconsUtils{
             e.preventDefault();
             if(e.data==="/")return;
             if(this.search_input.value.length === 0)this.removeAllChildNodes(this.results_container);
-            if(this.search_input.value.length > 0)this.findMatch(this.search_input.value);
+            if(this.search_input.value.length > 0){
+                setTimeout(() => {
+                    this.findMatch(this.search_input.value)
+                }, 100);    
+            };
         })
         document.addEventListener('keydown', (e)=>{
             if(e.code==='Slash'){
@@ -32,10 +33,14 @@ export default class SearchFilter extends IconsUtils{
 
     findMatch(value){
         this.cleanupResults()
-        Object.values(this.icons_arr).forEach((obj, _)=>{
-            if (obj.name.includes(value))//regex better
-            this.search_results.push(obj)
-        })    
+        let matcher = new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),'i')
+        let len = this.icons_arr.length;
+        while (len--) {
+            let element = this.icons_arr[len]
+            if(element&&element.name && element.name.match(matcher)){
+                this.search_results.push(element)
+            }
+        }
         this.plotMatches()
 
     }
@@ -49,6 +54,7 @@ export default class SearchFilter extends IconsUtils{
             icon_name.innerHTML = icon.name
             result_div.appendChild(icon_name)
             result_img.setAttribute('src', icon.static_url)
+            result_img.setAttribute('loading', 'lazy')
             result_div.appendChild(result_img)
             this.results_container.appendChild(result_div)
             if(icon.src){
@@ -57,11 +63,10 @@ export default class SearchFilter extends IconsUtils{
                 this.addClipboard([result_div])
             }
             this.addDeleteButton([result_div])
-            this.addRenameButton([result_div])
+            this.addRenameButton([result_div]) //slow mofo
 
          })
     }
-
     //helper
     removeAllChildNodes(parent) {
         while (parent.firstChild) {

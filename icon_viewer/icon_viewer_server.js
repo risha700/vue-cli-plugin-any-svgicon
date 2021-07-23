@@ -75,6 +75,8 @@ app.get('/', function(request, response){
 app.get('/icons', function(request, response){
   readIconDir(SpriteBundlePath, false).then((data)=>{
     response.setHeader('Content-Type', 'application/json');
+    response.setHeader('Cache-control', 'stale-while-revalidate=300')
+
     response.json({icons:data})
   })
 });
@@ -82,6 +84,8 @@ app.get('/icons', function(request, response){
 app.get('/src', function(request, response){
   readIconDir(MoreSvgPath, true).then((data)=>{
     response.setHeader('Content-Type', 'application/json');
+    response.setHeader('Cache-control', 'stale-while-revalidate=300')
+
     response.json({src_icons:data})
   })
 
@@ -123,10 +127,16 @@ app.post('/rename',jsonParser, function(request, response){
 
 
 });
+const cache_options={
+  setHeaders:(response, path)=>{
+    response.setHeader('Cache-Control', 'static, max-age=300')
+    response.setHeader('Accept', 'application/json');
+    response.setHeader('Accept', 'application/json');
+  }
+  }
 
-
-app.use('/static', express.static(SpriteBundlePath))
-app.use('/static', express.static(MoreSvgPath))
+app.use('/static', express.static(SpriteBundlePath, cache_options))
+app.use('/static', express.static(MoreSvgPath, cache_options))
 app.use('/IconsUtils', express.static(path.join(__dirname, 'IconsUtils.js')))
 
 app.use('', express.static(__dirname))

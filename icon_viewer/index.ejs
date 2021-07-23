@@ -41,6 +41,7 @@
             icon_name.innerHTML = icon.name
             icon_wrapper.appendChild(icon_name)
             icon_obj.setAttribute('src', icon.static_url)
+            icon_obj.setAttribute('loading', 'lazy')
             icon_wrapper.appendChild(icon_obj)
             applyIconAttributes(icon_wrapper, src)
             // icon_obj.addEventListener('load',()=>{forceStylingObjSvg(icon_obj)})
