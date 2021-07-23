@@ -81,7 +81,6 @@ renameButtonHandler(iconWrapper, editBtn, old_name, edit_icon, check_mark){
 }
 
 async renameIcon({fromName, toName}){
-  console.log('fromName, toName ',fromName, toName);
   // let icon_data = Object.values(this.icons_arr).find(item=>item.name===fromName)
   let old_idx = Object.values(this.icons_arr).findIndex(item=>item.name===fromName)
   if(old_idx>-1){
