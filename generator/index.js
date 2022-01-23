@@ -14,10 +14,9 @@ module.exports = (api, options) => {
     const expressServerJs = api.resolve(`node_modules/${api.id}/icon_viewer/icon_viewer_server.js`)
     api.extendPackage({
         devDependencies:{
-            "svg-sprite-loader": "^5.0.0",
+            "svg-sprite-loader": "^6.0.11",
             "svgo-loader": "^2.2.1",
-            "node-sass": "^4.12.0",
-            "sass-loader": "^8.0.2"
+            "sass-loader": "^12.0.0"
         },
         scripts:{
           'icons':`node ${expressServerJs} ${VUE_APP_SVG_FOLDERPATH} ${ALL_ICONS_PATH}`
